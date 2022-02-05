@@ -1,5 +1,17 @@
 version: '3.9'
 services:
+    ignite-database:
+        image: postgres:14-alpine
+        container_name: ignite-database
+        restart: always
+        ports:
+            - ${DB_PORT}:5432
+        environment:
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD="${DB_PASS}"
+            - POSTGRES_DB=${DB_NAME}
+        volumes:
+            - pgdata:/data/postgres
     app:
         build: .
         container_name: rentx
@@ -7,3 +19,10 @@ services:
             - 3333:3333
         volumes:
             - .:/usr/app
+        links:
+            - ignite-database
+        depends_on:
+            - ignite-database
+volumes:
+    pgdata:
+        driver: local
