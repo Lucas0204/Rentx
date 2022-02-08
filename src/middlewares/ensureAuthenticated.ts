@@ -30,6 +30,8 @@ export async function ensureAuthenticated(request: Request, response: Response, 
             });
         }
 
+        request.user_id = user.id;
+
         return next();
     } catch {
         return response.status(401).json({
