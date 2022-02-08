@@ -3,6 +3,7 @@ import { parse } from 'csv-parse';
 import { inject, injectable } from 'tsyringe';
 
 import { ICategoriesRepository } from '../../repositories/ICategoriesRepository';
+import { AppError } from '../../../../errors/AppError';
 
 interface IImportCategory {
     name: string;
@@ -43,20 +44,23 @@ class ImportCategoryUseCase {
     }
 
     async execute(file: Express.Multer.File): Promise<void> {
-        const categories = await this.loadCategories(file);
-        
-        categories.map(async category => {
-            const { name, description } = category;
-
-            const categoryExists = await this.categoriesRepository.findByName(name);
-
-            if (!categoryExists) {
-                await this.categoriesRepository.create({
-                    name,
-                    description
-                })
-            }
-        })
+        try {
+            const categories = await this.loadCategories(file);
+            categories.map(async category => {
+                const { name, description } = category;
+    
+                const categoryExists = await this.categoriesRepository.findByName(name);
+    
+                if (!categoryExists) {
+                    await this.categoriesRepository.create({
+                        name,
+                        description
+                    })
+                }
+            })
+        } catch (err) {
+            throw new AppError(err.message);
+        }
     }
 }
 
