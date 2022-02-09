@@ -23,7 +23,7 @@ class UsersRepository implements IUsersRepository {
         await this.repository.save(user);
     }
 
-    async updateAvatar({ id, avatar }: IUpdateAvatarDTO): Promise<void> {
+    async updateUserAvatar({ id, avatar }: IUpdateAvatarDTO): Promise<void> {
         await this.repository.update({ id }, { avatar });
     }
 
