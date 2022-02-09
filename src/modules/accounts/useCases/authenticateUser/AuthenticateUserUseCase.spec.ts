@@ -2,10 +2,10 @@ import 'dotenv/config';
 import 'reflect-metadata';
 import { AuthenticateUserUseCase } from './AuthenticateUserUseCase';
 import { CreateUserUseCase } from '../createUser/CreateUserUseCase';
-import { UsersRepositoryInMemory } from '../../repositories/in-memory/UsersRepositoryInMemory';
-import { IUsersRepository } from '../../repositories/IUsersRepository';
-import { ICreateUserDTO } from '../../dtos/ICreateUserDTO';
-import { AppError } from '../../../../errors/AppError';
+import { UsersRepositoryInMemory } from '@modules/accounts/repositories/in-memory/UsersRepositoryInMemory';
+import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
+import { ICreateUserDTO } from '@modules/accounts/dtos/ICreateUserDTO';
+import { AppError } from '@errors/AppError';
 
 let authenticateUserUseCase: AuthenticateUserUseCase;
 let createUserUseCase: CreateUserUseCase;

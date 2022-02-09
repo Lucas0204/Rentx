@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { resolve } from 'path';
-import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { deleteFile } from '../../../../utils/file';
+import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepository";
+import { deleteFile } from '@utils/file';
 
 interface IRequest {
     user_id: string;
@@ -23,7 +23,7 @@ class UpdateUserAvatarUseCase {
             await deleteFile(path + user.avatar);
         }
 
-        await this.usersRepository.updateAvatar({
+        await this.usersRepository.updateUserAvatar({
             id: user_id,
             avatar: avatar_file
         });

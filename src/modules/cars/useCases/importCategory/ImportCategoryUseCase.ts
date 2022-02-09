@@ -2,8 +2,8 @@ import { createReadStream, promises } from 'fs';
 import { parse } from 'csv-parse';
 import { inject, injectable } from 'tsyringe';
 
-import { ICategoriesRepository } from '../../repositories/ICategoriesRepository';
-import { AppError } from '../../../../errors/AppError';
+import { ICategoriesRepository } from '@modules/cars/repositories/ICategoriesRepository';
+import { AppError } from '@errors/AppError';
 
 interface IImportCategory {
     name: string;
