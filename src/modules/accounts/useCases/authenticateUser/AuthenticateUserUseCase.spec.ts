@@ -5,7 +5,7 @@ import { CreateUserUseCase } from '../createUser/CreateUserUseCase';
 import { UsersRepositoryInMemory } from '@modules/accounts/repositories/in-memory/UsersRepositoryInMemory';
 import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
 import { ICreateUserDTO } from '@modules/accounts/dtos/ICreateUserDTO';
-import { AppError } from '@errors/AppError';
+import { AppError } from '@shared/errors/AppError';
 
 let authenticateUserUseCase: AuthenticateUserUseCase;
 let createUserUseCase: CreateUserUseCase;

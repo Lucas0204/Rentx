@@ -7,11 +7,11 @@ module.exports = {
     "username": process.env.DB_USER,
     "password": process.env.DB_PASS,
     "database": process.env.DB_NAME,
-    "migrations": [ "./src/database/migrations/*.ts" ],
+    "migrations": [ "./src/shared/infra/typeorm/migrations/*.ts" ],
     "entities": [
-        "./src/modules/**/entities/*.ts"
+        "./src/modules/**/**/**/entities/*.ts"
     ],
     "cli": {
-        "migrationsDir": "./src/database/migrations"
+        "migrationsDir": "./src/shared/infra/typeorm/migrations"
     }
 }

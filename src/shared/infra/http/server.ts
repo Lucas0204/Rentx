@@ -1,15 +1,15 @@
 import 'dotenv/config';
-import './database';
-import './shared/containers';
+import '@shared/infra/typeorm';
+import '@shared/containers';
 import 'express-async-errors';
 
-import { AppError } from '@errors/AppError';
+import { AppError } from '@shared/errors/AppError';
 
 import express, { Request, Response, NextFunction } from 'express';
 
 import { router } from './routes';
 import swagger from 'swagger-ui-express';
-import swaggerConfig from './swagger.json';
+import swaggerConfig from '../../../swagger.json';
 
 const app = express();
 
