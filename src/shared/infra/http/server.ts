@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import '@shared/infra/typeorm';
+import createConnection from '@shared/infra/typeorm';
 import '@shared/containers';
 import 'express-async-errors';
 
@@ -10,6 +10,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import { router } from './routes';
 import swagger from 'swagger-ui-express';
 import swaggerConfig from '../../../swagger.json';
+
+createConnection();
 
 const app = express();
 
