@@ -26,6 +26,11 @@ class CategoriesRepositoryInMemory implements ICategoriesRepository {
         return category;
     }
 
+    async findById(id: string): Promise<Category> {
+        const category = this.categories.find(category => category.id === id);
+        return category;
+    }
+
     async get(): Promise<Category[]> {
         return this.categories;
     }
