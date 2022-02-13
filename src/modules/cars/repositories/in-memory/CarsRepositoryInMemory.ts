@@ -2,6 +2,7 @@ import { ICreateCarDTO } from "@modules/cars/dtos/ICreateCarDTO";
 import { Car } from "@modules/cars/infra/typeorm/entities/Car";
 import { ICarsRepository } from "../ICarsRepository";
 import { IListCarsOptionsDTO } from '@modules/cars/dtos/IListCarsOptionsDTO';
+import { IAddSpecificationsDTO } from "@modules/cars/dtos/IAddSpecificationsDTO";
 
 
 class CarsRepositoryInMemory implements ICarsRepository {
@@ -57,6 +58,18 @@ class CarsRepositoryInMemory implements ICarsRepository {
         })
 
         return cars;
+    }
+
+    async findById(id: string): Promise<Car> {
+        return this.cars.find(car => 
+            car.id === id
+        );
+    }
+
+    async addSpecifications({ car_id, specifications }: IAddSpecificationsDTO): Promise<Car> {
+        const car = this.cars.find(car => car.id === car_id);
+        car.specifications = specifications;
+        return car;     
     }
 }
 

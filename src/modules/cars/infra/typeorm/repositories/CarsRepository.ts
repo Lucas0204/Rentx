@@ -1,3 +1,4 @@
+import { IAddSpecificationsDTO } from "@modules/cars/dtos/IAddSpecificationsDTO";
 import { ICreateCarDTO } from "@modules/cars/dtos/ICreateCarDTO";
 import { IListCarsOptionsDTO } from "@modules/cars/dtos/IListCarsOptionsDTO";
 import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
@@ -61,6 +62,22 @@ class CarsRepository implements ICarsRepository {
         }
 
         return await query.getMany();
+    }
+
+    async findById(id: string): Promise<Car> {
+        return await this.repository.findOne(id);
+    }
+
+    async addSpecifications({ 
+        car_id, 
+        specifications 
+    }: IAddSpecificationsDTO): Promise<Car> {
+        const car = await this.repository.findOne(car_id);
+
+        return await this.repository.save({
+            ...car,
+            specifications
+        });
     }
 }
 
