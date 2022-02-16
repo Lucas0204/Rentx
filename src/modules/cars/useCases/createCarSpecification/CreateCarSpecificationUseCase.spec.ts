@@ -41,8 +41,6 @@ describe('Create car specification', () => {
             specifications_id: [ specification.id ]
         });
 
-        console.log(carWithSpecification);
-
         expect(carWithSpecification.specifications).toEqual([ specification ]);
     });
 
