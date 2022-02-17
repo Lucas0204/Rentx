@@ -9,9 +9,12 @@ import { CarImage } from '@modules/cars/infra/typeorm/entities/CarImage';
 export default async (host = 'ignite-database'): Promise<Connection> => {
     const defaultOptions = await getConnectionOptions();
 
+    const database = process.env.NODE_ENV === 'test' ? 'rentx_test' : defaultOptions.database;
+
     return await createConnection(
         Object.assign(defaultOptions, {
-            host,
+            host: process.env.NODE_ENV === 'test' ? 'localhost' : host,
+            database,
             entities: [
                 User,
                 Car,
