@@ -53,6 +53,11 @@ class CreateRentalUseCase {
             expected_return_date
         });
 
+        await this.carsRepository.updateAvailable({
+            car_id,
+            available: false
+        });
+
         return rental;
     }
 

@@ -3,6 +3,7 @@ import { Car } from "@modules/cars/infra/typeorm/entities/Car";
 import { ICarsRepository } from "../ICarsRepository";
 import { IListCarsOptionsDTO } from '@modules/cars/dtos/IListCarsOptionsDTO';
 import { IAddSpecificationsDTO } from "@modules/cars/dtos/IAddSpecificationsDTO";
+import { IUpdateAvailableDTO } from "@modules/cars/dtos/IUpdateAvailableDTO";
 
 
 class CarsRepositoryInMemory implements ICarsRepository {
@@ -70,6 +71,11 @@ class CarsRepositoryInMemory implements ICarsRepository {
         const car = this.cars.find(car => car.id === car_id);
         car.specifications = specifications;
         return car;     
+    }
+
+    async updateAvailable({ car_id, available }: IUpdateAvailableDTO): Promise<void> {
+        const index = this.cars.findIndex(car => car.id === car_id);
+        this.cars[index].available = available;
     }
 }
 
