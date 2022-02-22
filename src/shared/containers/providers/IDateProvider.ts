@@ -1,4 +1,5 @@
 export interface IDateProvider {
-    getDiffInHours(start_date: Date, end_date: Date): number;
     dateNow(): Date;
+    getDiffInHours(start_date: Date, end_date: Date): number;
+    getDiffInDays(start_date: Date, end_date: Date): number;
 }

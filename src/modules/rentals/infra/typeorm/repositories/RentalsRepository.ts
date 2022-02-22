@@ -1,7 +1,9 @@
+import { getRepository, Repository } from "typeorm";
+
+import { Rental } from "../entities/Rental";
+import { ICloseRentalDTO } from "@modules/rentals/dtos/ICloseRentalDTO";
 import { ICreateRentalDTO } from "@modules/rentals/dtos/ICreateRentalDTO";
 import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsRepository";
-import { getRepository, Repository } from "typeorm";
-import { Rental } from "../entities/Rental";
 
 class RentalsRepository implements IRentalsRepository {
     private repository: Repository<Rental>;
@@ -27,27 +29,37 @@ class RentalsRepository implements IRentalsRepository {
     }
 
     async findOpenRentalByCar(car_id: string): Promise<Rental> {
-        const rental = await this.repository.findOne({ car_id });
+        const rental = await this.repository.findOne({
+            where: { car_id, end_date: null } 
+        });
 
-        if (rental) {
-            if (rental.start_date != null && !rental.end_date) {
-                return rental;
-            }
-        }
-
-        return undefined;
+        return rental;
     }
 
     async findOpenRentalByUser(user_id: string): Promise<Rental> {
-        const rental = await this.repository.findOne({ user_id });
+        const rental = await this.repository.findOne({
+            where: { user_id, end_date: null }
+        });
 
-        if (rental) {
-            if (rental.start_date != null && !rental.end_date) {
-                return rental;
-            }
-        }
+        return rental;
+    }
 
-        return undefined;
+    async findById(id: string): Promise<Rental> {
+        return await this.repository.findOne(id);
+    }
+
+    async closeRental({
+        rental_id,
+        end_date,
+        total
+    }: ICloseRentalDTO): Promise<Rental> {
+        const rental = await this.repository.findOne({ id: rental_id });
+
+        return await this.repository.save({
+            ...rental,
+            end_date,
+            total
+        });
     }
 }
 

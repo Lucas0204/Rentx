@@ -1,3 +1,4 @@
+import { ICloseRentalDTO } from "@modules/rentals/dtos/ICloseRentalDTO";
 import { ICreateRentalDTO } from "@modules/rentals/dtos/ICreateRentalDTO";
 import { Rental } from "@modules/rentals/infra/typeorm/entities/Rental";
 import { IRentalsRepository } from "../IRentalsRepository";
@@ -44,6 +45,23 @@ class RentalsRepositoryInMemory implements IRentalsRepository {
                 && rental.start_date !== null
                 && rental.end_date == null
         );
+    }
+
+    async findById(id: string): Promise<Rental> {
+        return this.rentals.find(rental => rental.id === id);
+    }
+
+    async closeRental({
+        rental_id,
+        end_date,
+        total
+    }: ICloseRentalDTO): Promise<void> {
+        const index = this.rentals.findIndex(rental => rental.id === rental_id);
+
+        Object.assign(this.rentals[index], {
+            end_date,
+            total
+        });
     }
 }
 
