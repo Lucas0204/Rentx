@@ -55,13 +55,21 @@ class RentalsRepositoryInMemory implements IRentalsRepository {
         rental_id,
         end_date,
         total
-    }: ICloseRentalDTO): Promise<void> {
+    }: ICloseRentalDTO): Promise<Rental> {
         const index = this.rentals.findIndex(rental => rental.id === rental_id);
 
         Object.assign(this.rentals[index], {
             end_date,
             total
         });
+
+        return this.rentals[index];
+    }
+
+    async findByUserId(user_id: string): Promise<Rental[]> {
+        return this.rentals.filter(rental => 
+            rental.user_id === user_id
+        );
     }
 }
 
