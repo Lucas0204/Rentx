@@ -34,7 +34,7 @@ class ListAvailableCarsUseCase {
         const isValidId = validate(category_id);
 
         if (!isValidId) {
-            throw new AppError('Category does not exist');
+            throw new AppError('Category does not exist!');
         }
 
         const categoryExists = await this.categoriesRepository

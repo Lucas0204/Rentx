@@ -28,15 +28,15 @@ describe('Create category', () => {
     })
 
     it('Should not be able to create a category that already exists', async () => {
-        expect(async () => {
-            const category = {
-                name: 'Category test',
-                description: 'Test'
-            }
-    
-            await createCategoryUseCase.execute(category);
-            await createCategoryUseCase.execute(category);
+        const category = {
+            name: 'Category test',
+            description: 'Test'
+        }
+        
+        await categoriesRepositoryInMemory.create(category);
 
-        }).rejects.toBeInstanceOf(AppError);
+        await expect(
+            createCategoryUseCase.execute(category)
+        ).rejects.toEqual(new AppError('Category already exists!'));
     })
 })

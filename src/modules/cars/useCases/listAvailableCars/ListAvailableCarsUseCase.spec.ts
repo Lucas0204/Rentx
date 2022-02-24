@@ -107,44 +107,18 @@ describe('List all available cars', () => {
     })
 
     it('must not list available cars by a invalid category_id', async () => {
-        const carData: ICreateCarDTO = {
-            name: 'Car3',
-            description: 'test car',
-            daily_rate: 140,
-            license_plate: 'XXXXXXX',
-            brand: 'Test',
-            fine_amount: 60,
-            category_id: 'INVALID_ID'
-        }
-
-        expect(async () => {
-            const car = await carsRepositoryInMemory.create(carData);
-
-            await listAvailableCarsUseCase.execute({ 
-                category_id: car.category_id 
-            });
-
-        }).rejects.toBeInstanceOf(AppError);
+        await expect(
+            listAvailableCarsUseCase.execute({ 
+                category_id: 'INVALID_ID'
+            })
+        ).rejects.toEqual(new AppError('Category does not exist!'));
     })
 
     it('must not list available cars by a category_id that does not exist', async () => {
-        const carData: ICreateCarDTO = {
-            name: 'Car3',
-            description: 'test car',
-            daily_rate: 140,
-            license_plate: 'XXXXXXX',
-            brand: 'Test',
-            fine_amount: 60,
-            category_id: uuidv4()
-        }
-
-        expect(async () => {
-            const car = await carsRepositoryInMemory.create(carData);
-
-            await listAvailableCarsUseCase.execute({ 
-                category_id: car.category_id 
-            });
-
-        }).rejects.toBeInstanceOf(AppError);
+        await expect(
+            listAvailableCarsUseCase.execute({ 
+                category_id: uuidv4()
+            })
+        ).rejects.toEqual(new AppError('Category does not exist!'));
     })
 })

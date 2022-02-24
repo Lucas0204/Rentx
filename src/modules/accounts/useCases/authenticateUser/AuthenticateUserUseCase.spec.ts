@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import 'reflect-metadata';
+import { hash } from 'bcryptjs';
+
 import { AuthenticateUserUseCase } from './AuthenticateUserUseCase';
 import { CreateUserUseCase } from '../createUser/CreateUserUseCase';
 import { UsersRepositoryInMemory } from '@modules/accounts/repositories/in-memory/UsersRepositoryInMemory';
@@ -8,60 +10,60 @@ import { ICreateUserDTO } from '@modules/accounts/dtos/ICreateUserDTO';
 import { AppError } from '@shared/errors/AppError';
 
 let authenticateUserUseCase: AuthenticateUserUseCase;
-let createUserUseCase: CreateUserUseCase;
 let usersRepositoryInMemory: IUsersRepository;
 
 describe('Authenticate user', () => {
     beforeEach(() => {
         usersRepositoryInMemory = new UsersRepositoryInMemory();
-        createUserUseCase = new CreateUserUseCase(usersRepositoryInMemory);
         authenticateUserUseCase = new AuthenticateUserUseCase(usersRepositoryInMemory);
     })
 
     it('should be able to authenticate an user and return token', async () => {
+        const password = '1234';
+        const passwordHash = await hash(password, 8);
         const user: ICreateUserDTO = {
             name: 'Test',
             email: 'test@test.com',
-            password: '1234',
+            password: passwordHash,
             driver_license: '777'
         };
 
-        await createUserUseCase.execute(user);
+        await usersRepositoryInMemory.create(user);
 
         const response = await authenticateUserUseCase.execute({
             email: user.email,
-            password: user.password
+            password: password
         });
 
         expect(response).toHaveProperty('token');
         expect(response).toHaveProperty('user');
     })
 
-    it('should not be able to authenticate an user that not exist', () => {
-        expect(async () => {
-            await authenticateUserUseCase.execute({
+    it('should not be able to authenticate an user that not exist', async () => {
+        await expect(
+            authenticateUserUseCase.execute({
                 email: 'any@test.com',
                 password: '1234'
             })
-        }).rejects.toBeInstanceOf(AppError);
+        ).rejects.toEqual(new AppError('Email or Password incorrect!'));
     })
 
-    it('should not be able to authenticate an user with incorrect password', () => {
-        expect(async () => {
-            const user: ICreateUserDTO = {
-                name: 'Test',
-                email: 'test@test.com',
-                password: '1234',
-                driver_license: '777'
-            };
+    it('should not be able to authenticate an user with incorrect password', async () => {
+        const password = await hash('1234', 8);
+        const user: ICreateUserDTO = {
+            name: 'Test',
+            email: 'test@test.com',
+            password,
+            driver_license: '777'
+        };
 
-            await createUserUseCase.execute(user);
+        await usersRepositoryInMemory.create(user);
 
-            await authenticateUserUseCase.execute({
+        await expect(
+            authenticateUserUseCase.execute({
                 email: user.email,
                 password: 'incorrectPassword'
-            });
-
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError('Email or Password incorrect!'));
     })
 })

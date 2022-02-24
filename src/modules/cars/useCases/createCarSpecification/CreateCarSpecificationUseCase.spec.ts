@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
 import { CarsRepositoryInMemory } from "@modules/cars/repositories/in-memory/CarsRepositoryInMemory";
 import { SpecificationsRepositoryInMemory } from "@modules/cars/repositories/in-memory/SpecificationsRepositoryInMemory";
@@ -45,34 +47,34 @@ describe('Create car specification', () => {
     });
 
     it('should not be able to add specification on a car that does not exist', async () => {
-        expect(async () => {
-            const car_id = 'car_does_not_exist';
+        const car_id = uuidv4();
 
-            await createCarSpecificationUseCase.execute({
+        await expect(
+            createCarSpecificationUseCase.execute({
                 car_id,
                 specifications_id: [ 'any' ]
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError('Car does not exist!'));
     });
 
     it('should not be able to add a specification that do not exist on a car', async () => {
-        expect(async () => {
-            const car = await carsRepositoryInMemory.create({
-                name: 'Car1',
-                description: 'Test car',
-                daily_rate: 140,
-                brand: 'Test',
-                fine_amount: 30,
-                license_plate: 'XXXXXX',
-                category_id: 'category'
-            });
+        const car = await carsRepositoryInMemory.create({
+            name: 'Car1',
+            description: 'Test car',
+            daily_rate: 140,
+            brand: 'Test',
+            fine_amount: 30,
+            license_plate: 'XXXXXX',
+            category_id: 'category'
+        });
 
-            const specifications_id = [ 'specification_does_not_exist' ];
+        const specifications_id = [ uuidv4() ];
 
-            await createCarSpecificationUseCase.execute({
+        await expect(
+            createCarSpecificationUseCase.execute({
                 car_id: car.id,
                 specifications_id
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError('No specifications found!'));
     });
 })
