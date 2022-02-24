@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
-import { UsersRepository } from '@modules/accounts/infra/typeorm/repositories/UsersRepository';
+
+import { UsersTokenRepository } from '@modules/accounts/infra/typeorm/repositories/UsersTokenRepository';
+import auth from '@config/auth';
 
 interface IPayload {
     sub: string;
@@ -22,11 +24,14 @@ export async function ensureAuthenticated(
     const token = authToken.split(' ')[1];
 
     try {
-        const { sub: user_id } = verify(token, process.env.JWT_SECRET) as IPayload;
+        const { sub: user_id } = verify(token, auth.refresh_token_secret) as IPayload;
         
-        const usersRepository = new UsersRepository();
+        const usersTokenRepository = new UsersTokenRepository();
 
-        const user = await usersRepository.findById(user_id);
+        const user = await usersTokenRepository.findOne({
+            user_id,
+            refresh_token: token
+        });
 
         if (!user) {
             return response.status(401).json({
