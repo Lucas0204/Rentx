@@ -29,10 +29,15 @@ class UsersTokenRepository implements IUsersTokenRepository {
         user_id,
         refresh_token
     }: IFindUserTokenDTO): Promise<UserToken> {
-        return await this.repository.findOne({
-            user_id,
-            refresh_token
-        });
+        const tokenQuery = this.repository
+            .createQueryBuilder('token')
+            .where('token.refresh_token = :refresh_token', { refresh_token });
+
+        if (user_id) {
+            tokenQuery.andWhere('token.user_id = :user_id', { user_id });
+        }
+
+        return await tokenQuery.getOne();
     }
 
     async delete(token_id: string): Promise<void> {

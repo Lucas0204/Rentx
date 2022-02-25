@@ -30,6 +30,10 @@ class DayjsDateProvider implements IDateProvider {
     addHours(hours: number): Date {
         return dayjs().add(hours, 'hour').toDate();
     }
+
+    verifyIfExpires(expires_date: Date, date_to_compare: Date): boolean {
+        return dayjs(date_to_compare).isAfter(expires_date);
+    }
 }
 
 export { DayjsDateProvider };

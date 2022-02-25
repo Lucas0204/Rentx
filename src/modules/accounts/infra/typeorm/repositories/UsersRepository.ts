@@ -3,6 +3,7 @@ import { User } from '../entities/User';
 import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
 import { ICreateUserDTO } from '@modules/accounts/dtos/ICreateUserDTO';
 import { IUpdateAvatarDTO } from '@modules/accounts/dtos/IUpdateAvatarDTO';
+import { IResetPasswordDTO } from '@modules/accounts/dtos/IResetPasswordDTO';
 
 class UsersRepository implements IUsersRepository {
     private repository: Repository<User>;
@@ -35,6 +36,10 @@ class UsersRepository implements IUsersRepository {
     async findById(id: string): Promise<User> {
         const user = await this.repository.findOne(id);
         return user;
+    }
+
+    async resetPassword({ user_id, password }: IResetPasswordDTO): Promise<void> {
+        await this.repository.update({ id: user_id }, { password });
     }
 }
 
