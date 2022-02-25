@@ -8,8 +8,8 @@ import { AppError } from "@shared/errors/AppError";
 import { CreateRentalUseCase } from "./CreateRentalUseCase"
 import { ICarsRepository } from '@modules/cars/repositories/ICarsRepository';
 import { CarsRepositoryInMemory } from '@modules/cars/repositories/in-memory/CarsRepositoryInMemory';
-import { IDateProvider } from '@shared/containers/providers/IDateProvider';
-import { DayjsDateProvider } from '@shared/containers/providers/implementations/DayjsDateProvider';
+import { IDateProvider } from '@shared/containers/providers/DateProvider/IDateProvider';
+import { DayjsDateProvider } from '@shared/containers/providers/DateProvider/implementation/DayjsDateProvider';
 
 
 let rentalsRepositoryInMemory: IRentalsRepository;

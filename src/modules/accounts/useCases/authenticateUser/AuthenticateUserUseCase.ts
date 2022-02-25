@@ -6,7 +6,7 @@ import auth from '@config/auth';
 import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
 import { AppError } from '@shared/errors/AppError';
 import { IUsersTokenRepository } from '@modules/accounts/repositories/IUsersTokenRepository';
-import { IDateProvider } from '@shared/containers/providers/IDateProvider';
+import { IDateProvider } from '@shared/containers/providers/DateProvider/IDateProvider';
 import { User } from '@modules/accounts/infra/typeorm/entities/User';
 
 interface IRequest {

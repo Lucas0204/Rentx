@@ -5,7 +5,7 @@ import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsReposi
 import { AppError } from "@shared/errors/AppError";
 import { Rental } from '@modules/rentals/infra/typeorm/entities/Rental';
 import { ICarsRepository } from '@modules/cars/repositories/ICarsRepository';
-import { IDateProvider } from '@shared/containers/providers/IDateProvider';
+import { IDateProvider } from '@shared/containers/providers/DateProvider/IDateProvider';
 
 interface IRequest {
     user_id: string;
