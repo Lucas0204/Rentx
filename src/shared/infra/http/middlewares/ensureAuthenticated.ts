@@ -21,25 +21,25 @@ export async function ensureAuthenticated(
         });
     }
 
-    const token = authToken.split(' ')[1];
+    const refresh_token = authToken.split(' ')[1];
 
     try {
-        const { sub: user_id } = verify(token, auth.refresh_token_secret) as IPayload;
+        const { sub: user_id } = verify(refresh_token, auth.refresh_token_secret) as IPayload;
         
         const usersTokenRepository = new UsersTokenRepository();
 
-        const user = await usersTokenRepository.findOne({
+        const userToken = await usersTokenRepository.findOne({
             user_id,
-            refresh_token: token
+            refresh_token
         });
 
-        if (!user) {
+        if (!userToken) {
             return response.status(401).json({
-                error: 'User does not exists!'
+                error: 'Invalid token!'
             });
         }
 
-        request.user_id = user.id;
+        request.user_id = user_id;
 
         return next();
     } catch {

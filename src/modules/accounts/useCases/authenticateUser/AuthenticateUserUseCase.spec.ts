@@ -8,14 +8,28 @@ import { UsersRepositoryInMemory } from '@modules/accounts/repositories/in-memor
 import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
 import { ICreateUserDTO } from '@modules/accounts/dtos/ICreateUserDTO';
 import { AppError } from '@shared/errors/AppError';
+import { IUsersTokenRepository } from '@modules/accounts/repositories/IUsersTokenRepository';
+import { UsersTokenRepositoryInMemory } from '@modules/accounts/repositories/in-memory/UsersTokenRepositoryInMemory';
+import { IDateProvider } from '@shared/containers/providers/DateProvider/IDateProvider';
+import { DayjsDateProvider } from '@shared/containers/providers/DateProvider/implementation/DayjsDateProvider';
 
 let authenticateUserUseCase: AuthenticateUserUseCase;
 let usersRepositoryInMemory: IUsersRepository;
+let usersTokenRepositoryInMemory: IUsersTokenRepository;
+
+let dateProvider: IDateProvider;
 
 describe('Authenticate user', () => {
     beforeEach(() => {
         usersRepositoryInMemory = new UsersRepositoryInMemory();
-        authenticateUserUseCase = new AuthenticateUserUseCase(usersRepositoryInMemory);
+        usersTokenRepositoryInMemory = new UsersTokenRepositoryInMemory();
+        dateProvider = new DayjsDateProvider();
+
+        authenticateUserUseCase = new AuthenticateUserUseCase(
+            usersRepositoryInMemory,
+            usersTokenRepositoryInMemory,
+            dateProvider
+        );
     })
 
     it('should be able to authenticate an user and return token', async () => {
