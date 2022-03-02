@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 
-import { UsersTokenRepository } from '@modules/accounts/infra/typeorm/repositories/UsersTokenRepository';
 import auth from '@config/auth';
 
 interface IPayload {
@@ -21,23 +20,10 @@ export async function ensureAuthenticated(
         });
     }
 
-    const refresh_token = authToken.split(' ')[1];
+    const token = authToken.split(' ')[1];
 
     try {
-        const { sub: user_id } = verify(refresh_token, auth.refresh_token_secret) as IPayload;
-        
-        const usersTokenRepository = new UsersTokenRepository();
-
-        const userToken = await usersTokenRepository.findOne({
-            user_id,
-            refresh_token
-        });
-
-        if (!userToken) {
-            return response.status(401).json({
-                error: 'Invalid token!'
-            });
-        }
+        const { sub: user_id } = verify(token, auth.jwt.secret) as IPayload;
 
         request.user_id = user_id;
 

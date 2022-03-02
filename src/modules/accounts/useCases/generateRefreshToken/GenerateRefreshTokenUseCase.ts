@@ -16,6 +16,11 @@ interface IGenerateToken {
     user_id: string;
 }
 
+interface ITokenResponse {
+    token: string;
+    refresh_token: string;
+}
+
 @injectable()
 class GenerateRefreshTokenUseCase {
     constructor(
@@ -25,8 +30,8 @@ class GenerateRefreshTokenUseCase {
         private dateProvider: IDateProvider
     ) {}
     
-    async execute(token: string): Promise<string> {
-        const { sub: user_id, email } = verify(token, auth.refresh_token_secret) as IPayload;
+    async execute(token: string): Promise<ITokenResponse> {
+        const { sub: user_id, email } = verify(token, auth.refresh_token.secret) as IPayload;
 
         const userToken = await this.usersTokenRepository.findOne({
             user_id,
@@ -44,20 +49,28 @@ class GenerateRefreshTokenUseCase {
             user_id
         });
 
-        return refresh_token;
+        const newToken = sign({}, auth.jwt.secret, {
+            subject: user_id,
+            expiresIn: auth.jwt.expires
+        });
+
+        return {
+            token: newToken,
+            refresh_token
+        };
     }
 
     private async generateRefreshToken({ email, user_id }: IGenerateToken): Promise<string> {
         const refresh_token = sign({
             email
         }, 
-        auth.refresh_token_secret, 
+        auth.refresh_token.secret, 
         {
             subject: user_id,
-            expiresIn: auth.refresh_token_expires
+            expiresIn: auth.refresh_token.expires
         });
 
-        const daysToExpire = parseInt(auth.refresh_token_expires_days);
+        const daysToExpire = parseInt(auth.refresh_token.expires_days);
         const expires_date = this.dateProvider.addDays(daysToExpire);
         
         await this.usersTokenRepository.create({

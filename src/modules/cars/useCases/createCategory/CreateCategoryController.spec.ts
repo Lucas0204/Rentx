@@ -35,7 +35,7 @@ describe('Create Category Controller', () => {
             `
         );
 
-        const token = sign({ email }, auth.refresh_token_secret, {
+        const token = sign({ email }, auth.refresh_token.secret, {
             subject: adminUserId,
             expiresIn: '1d'
         });

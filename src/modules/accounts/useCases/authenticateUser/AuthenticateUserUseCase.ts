@@ -49,9 +49,9 @@ class AuthenticateUserUseCase {
             throw new AppError('Email or Password incorrect!');
         }
 
-        const token = sign({}, auth.token_secret, {
+        const token = sign({}, auth.jwt.secret, {
             subject: user.id,
-            expiresIn: auth.token_expires
+            expiresIn: auth.jwt.expires
         })
 
         const refresh_token = await this.generateRefreshToken(user);
@@ -70,13 +70,13 @@ class AuthenticateUserUseCase {
         const refresh_token = sign({ 
             email
         }, 
-        auth.refresh_token_secret, 
+        auth.refresh_token.secret, 
         {
             subject: id,
-            expiresIn: auth.refresh_token_expires
+            expiresIn: auth.refresh_token.expires
         });
 
-        const daysToExpire = parseInt(auth.refresh_token_expires_days);
+        const daysToExpire = parseInt(auth.refresh_token.expires_days);
 
         const expires_date = this.dateProvider.addDays(daysToExpire);
 
