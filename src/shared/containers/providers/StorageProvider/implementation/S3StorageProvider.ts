@@ -25,6 +25,7 @@ class S3StorageProvider implements IStorageProvider {
         await this.client.putObject({
             Bucket: `${process.env.AWS_BUCKET}/${folder}`,
             Key: file_name,
+            ACL: 'public-read',
             Body: fileContent,
             ContentType
         }).promise();
